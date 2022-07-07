@@ -2,7 +2,7 @@
 
 from wnfapostersgen.art_generator import ArtGeneratorFromText
 import azure.functions as func
-import base64
+import base64, json
 import logging
 
 
@@ -15,22 +15,23 @@ def compute(text):
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
-    try:
-        req_body = req.get_json()
-    except ValueError:
-        pass
-    else:
+    text = req.params.get('text')
+    if not text:
         try:
-            text = str(req_body.get('text'))
+            req_body = req.get_json()
         except ValueError:
             pass
+        else: 
+            text = req_body.get('text')
     
-    if (text and len(text) > 0):
+    if text:
         try:
             image_binary = compute(text)
-            image_base64 = base64.b64encode(image_binary)
+            image_base64 = base64.b64encode(image_binary).decode('ascii')
             return func.HttpResponse(
-                image_base64,
+                json.dumps({
+                    'image_data': str(image_base64)
+                }),
                 status_code=200
             )
         except ValueError:

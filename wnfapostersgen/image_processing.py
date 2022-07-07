@@ -67,6 +67,24 @@ def grid_rotate_right(grid_pos_size):
 
     return grid_position_new, grid_size
 
+def check_validation(en_text, cn_text):
+    # check length
+    if (len(en_text) == 0 or len(cn_text) == 0):
+        return False
+
+    # check cn_text contains chinese character
+    has_cnchar = False
+    for char in cn_text:
+        if is_chinese_char(char):
+            has_cnchar = True
+            break
+    if not has_cnchar:
+        return False
+
+    # valid    
+    return True
+    
+
 class EmotionDataParser:
     def __init__(self, emotion_data):
         self.emotion_data_raw = emotion_data
@@ -487,7 +505,6 @@ class GridArt:
             out_selected = iu.crop_image(self.out, grid_to_size(*size), grid_to_pos(*position))
             res_block = iu.add_mask_to_image_invert(out_selected, res_block)
             self.out = iu.paste_image(self.out, res_block, grid_to_pos(*position))
-
 
     def gen(self):
         '''

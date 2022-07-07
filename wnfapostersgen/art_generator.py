@@ -1,5 +1,5 @@
 
-from wnfapostersgen.image_processing import GridArt
+from wnfapostersgen.image_processing import GridArt, check_validation
 from wnfapostersgen.emotion_analysis import predict_emo
 from wnfapostersgen.azureTranslate import translate
 
@@ -12,9 +12,11 @@ from PIL import Image
     text data must be in english
 '''
 class ArtGeneratorFromText:
-    def __init__(self, text):
+    def __init__(self, text):        
         self.text_en, self.text_cn = translate(text)
-    
+        if not check_validation(self.text_en, self.text_cn):
+            raise ValueError
+
     def generate(self):
         emotion_data = predict_emo(self.text_en)
         
