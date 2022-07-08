@@ -28,6 +28,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         try:
             image_binary = compute(text)
             image_base64 = base64.b64encode(image_binary).decode('ascii')
+            # image_base64 = base64.urlsafe_b64encode(image_binary).decode('ascii')
             return func.HttpResponse(
                 json.dumps({
                     'image_data': str(image_base64)
