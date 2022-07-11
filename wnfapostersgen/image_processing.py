@@ -187,7 +187,7 @@ class GridArt:
         self.random_generator = ControlledRandomGenerator(emotion_data)                                             # seeded random generator
         self.out = np.zeros((OUT_RES_HEIGHT, OUT_RES_WIDTH, 4), dtype=np.ubyte)                                     # output image
         self.out[:,:] = [255,255,255,255]
-        # self.major_emotion = self.random_generator.select_list(self.data_parser.get_major_emotion_candidates())     # major emotion
+        # self.major_emotion = self.random_generator.select_list(self.data_parser.get_major_emotion_candidates())   # major emotion
         self.major_emotion = self.data_parser.get_main_emotion()
         self.record = record                                                                                        # (base64, text_cn, text_en)
 

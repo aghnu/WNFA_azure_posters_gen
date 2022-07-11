@@ -21,8 +21,10 @@ class ArtGeneratorFromText:
         emotion_data = predict_emo(self.text_en)
         
         # emotion_data_json_string = json.dumps(emotion_data)
+        base64_text = base64.b64encode(self.text_en.encode()).decode('ascii')
+
         art = GridArt(emotion_data, {
-            'base64': str(base64.b64encode(self.text_en.encode())),
+            'base64': base64_text,
             'text_cn': self.text_cn, 
             'text_en': self.text_en
         })
