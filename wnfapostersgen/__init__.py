@@ -25,7 +25,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
             text = req_body.get('text')
     
     if text:
-        try:
+
             image_binary = compute(text)
             image_base64 = base64.b64encode(image_binary).decode('ascii')
             # image_base64 = base64.urlsafe_b64encode(image_binary).decode('ascii')
@@ -35,16 +35,28 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
                 }),
                 status_code=200
             )
-        except ValueError:
-            return func.HttpResponse(
-                "invalid input",
-                status_code=400
-            )
-        except:
-            return func.HttpResponse(
-                "server error",
-                status_code=500
-            )
+
+
+        # try:
+        #     image_binary = compute(text)
+        #     image_base64 = base64.b64encode(image_binary).decode('ascii')
+        #     # image_base64 = base64.urlsafe_b64encode(image_binary).decode('ascii')
+        #     return func.HttpResponse(
+        #         json.dumps({
+        #             'image_data': str(image_base64)
+        #         }),
+        #         status_code=200
+        #     )
+        # except ValueError:
+        #     return func.HttpResponse(
+        #         "invalid input",
+        #         status_code=400
+        #     )
+        # except:
+        #     return func.HttpResponse(
+        #         "server error",
+        #         status_code=500
+        #     )
     else:
         return func.HttpResponse(
             "invalid input",
