@@ -339,32 +339,31 @@ class GridArt:
             # paste res
             self.out = iu.paste_image(self.out, res_block, grid_to_pos(*position))
 
-    def apply_layer_grid(self, grid):
+    def apply_layer_grid(self, grid, files_binary):
+        files_index = 0
         for job in grid[0]:
             # get res
-            
-            path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
-            selected_file = self.random_generator.select_list(file_list)
+            img_binary = files_binary[files_index]
+            files_index += 1
 
-            res_grid = iu.load_image(path + selected_file)
+            res_grid = iu.binary_to_image(img_binary)
             res_grid = iu.resize_image_to_size(res_grid, grid_to_size(*job['size']))
             
-            # past
+            # paste
             self.out = iu.paste_image(self.out, res_grid, grid_to_pos(*job['position']))
 
-    def apply_layer_background(self, grid):
+    def apply_layer_background(self, grid, files_binary):
         grid_transformation_steps = self.random_generator.gen_random_rotation_and_flip()
+        files_index = 0
         for job in grid[0]:
             # get transformed position
             position, size = self.get_random_grid_transformation(grid_transformation_steps, (job['position'], job['size']))
 
             # get res
-            path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
-            selected_file = self.random_generator.select_list(file_list)
+            img_binary = files_binary[files_index]
+            files_index += 1
 
-            res_block = iu.load_image(path + selected_file)
+            res_block = iu.binary_to_image(img_binary)
             res_block = self.stretch_crop_res(res_block, grid_to_size(*size))
 
             # apply mask to res if relevant
@@ -388,18 +387,18 @@ class GridArt:
             # paste res
             self.out = iu.paste_image(self.out, res_block, grid_to_pos(*position))
 
-    def apply_layer_picture(self, grid):
+    def apply_layer_picture(self, grid, files_binary):
         grid_transformation_steps = self.random_generator.gen_random_rotation_and_flip()
+        files_index = 0
         for job in grid[0]:
             # get transformed position
             position, size = self.get_random_grid_transformation(grid_transformation_steps, (job['position'], job['size']))
 
             # get res
-            path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
-            selected_file = self.random_generator.select_list(file_list)
+            img_binary = files_binary[files_index]
+            files_index += 1
 
-            res_block = iu.load_image(path + selected_file)
+            res_block = iu.binary_to_image(img_binary)
             res_block = self.stretch_crop_res(res_block, grid_to_size(*size))
 
             # apply mask to res if relevant
@@ -423,31 +422,30 @@ class GridArt:
             # paste res
             self.out = iu.paste_image(self.out, res_block, grid_to_pos(*position))
 
-    def apply_layer_text(self, grid):
+    def apply_layer_text(self, grid, files_binary):
         grid_transformation_steps = self.random_generator.gen_random_rotation_and_flip()
+        files_index = 0
         for job in grid[0]:
             # get transformed position
             position, size = self.get_random_grid_transformation(grid_transformation_steps, (job['position'], job['size']))
            
             # get font path
-            path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
-            selected_file = self.random_generator.select_list(file_list)
-            
+            font_binary = files_binary[files_index]
+            files_index += 1
            
             # gen res
             text_type = job['type'] 
             if text_type == 'char':
                 text_str = self.random_generator.select_list([c for c in list(self.record['text_cn']) if is_chinese_char(c)])
-                res_block = iu.get_char_image(text_str, path + selected_file, grid_to_size(*size)[1], "black")
+                res_block = iu.get_char_image(text_str, font_binary, grid_to_size(*size)[1], "black")
                 res_block = iu.resize_image_to_size(res_block, grid_to_size(*size))
             elif text_type == 'text':
                 text_str = self.record['base64']
-                res_block = iu.get_text_image(text_str, grid_to_size(*size), path + selected_file, self.random_generator.gen_range(50, 150), "black")
+                res_block = iu.get_text_image(text_str, grid_to_size(*size), font_binary, self.random_generator.gen_range(50, 150), "black")
                 res_block = iu.resize_image_to_size(res_block, grid_to_size(*size))
             elif text_type == 'binary':
                 text_str = self.get_binary_code_text()
-                res_block = iu.get_text_image(text_str, grid_to_size(*size), path + selected_file, self.random_generator.gen_range(25, 150), "black")
+                res_block = iu.get_text_image(text_str, grid_to_size(*size), font_binary, self.random_generator.gen_range(25, 150), "black")
                 res_block = iu.resize_image_to_size(res_block, grid_to_size(*size))
 
             # apply mask to res if relevant
@@ -474,18 +472,18 @@ class GridArt:
 
             self.out = iu.paste_image(self.out, res_block, grid_to_pos(*position))
 
-    def apply_layer_decoration(self, grid):
+    def apply_layer_decoration(self, grid, files_binary):
         grid_transformation_steps = self.random_generator.gen_random_rotation_and_flip()
+        files_index = 0
         for job in grid[0]:
             # get transformed position
             position, size = self.get_random_grid_transformation(grid_transformation_steps, (job['position'], job['size']))
 
             # get res
-            path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
-            selected_file = self.random_generator.select_list(file_list)
+            img_binary = files_binary[files_index]
+            files_index += 1
 
-            res_block = iu.load_image(path + selected_file)
+            res_block = iu.binary_to_image(img_binary)
             res_block = self.stretch_crop_res(res_block, grid_to_size(*size))
 
             # apply mask to res if relevant
@@ -509,18 +507,18 @@ class GridArt:
             # paste res
             self.out = iu.paste_image(self.out, res_block, grid_to_pos(*position))
 
-    def apply_layer_geometry(self, grid):
+    def apply_layer_geometry(self, grid, files_binary):
         grid_transformation_steps = self.random_generator.gen_random_rotation_and_flip()
+        files_index = 0
         for job in grid[0]:
             # get transformed position
             position, size = self.get_random_grid_transformation(grid_transformation_steps, (job['position'], job['size']))
 
             # get res
-            path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
-            selected_file = self.random_generator.select_list(file_list)
+            img_binary = files_binary[files_index]
+            files_index += 1
 
-            res_block = iu.load_image(path + selected_file)
+            res_block = iu.binary_to_image(img_binary)
             res_block = self.stretch_crop_res(res_block, grid_to_size(*size))
 
             # apply mask to res if relevant
@@ -660,14 +658,15 @@ class GridArt:
         '''
 
         grids = self.read_grid()
+        binary_files = self.get_all_assets_from_async_client(grids)
 
-        self.apply_layer_block(grids['a'])              # a
-        self.apply_layer_grid(grids['b'])               # b
-        self.apply_layer_background(grids['c'])         # c
-        self.apply_layer_picture(grids['d'])            # d
-        self.apply_layer_text(grids['e'])               # e
-        self.apply_layer_decoration(grids['f'])         # f
-        self.apply_layer_geometry(grids['g'])           # g
+        self.apply_layer_block(grids['a'])                                  # a
+        self.apply_layer_grid(grids['b'], binary_files['b'])                # b
+        self.apply_layer_background(grids['c'], binary_files['c'])          # c
+        self.apply_layer_picture(grids['d'], binary_files['d'])             # d
+        self.apply_layer_text(grids['e'], binary_files['e'])                # e
+        self.apply_layer_decoration(grids['f'], binary_files['f'])          # f
+        self.apply_layer_geometry(grids['g'], binary_files['g'])            # g
 
         # post processing
         self.out = iu.change_fully_transparent_pixels_alpha(self.out, 255)
@@ -685,7 +684,5 @@ class GridArt:
         
         # convert RGBA to RGB
         self.out = iu.make_RGBA_to_RGB(self.out)
-
-        self.get_all_assets_from_async_client(grids)
 
         return self.out

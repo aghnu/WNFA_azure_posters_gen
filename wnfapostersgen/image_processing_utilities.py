@@ -15,6 +15,11 @@ def get_path(relative_path):
     # path = os.path.abspath(os.path.split(__file__)[0] + "/" + relative_path)
     return relative_path
 
+
+def binary_to_image(binary):
+    image = np.array(Image.open(sysio.BytesIO(binary)))
+    return img_as_ubyte(cv.cvtColor(image, cv.COLOR_RGB2RGBA)) 
+
 '''
 load an image from path
 image is an numpy array with RGBA chanels and a type of np.ubyte
@@ -97,7 +102,7 @@ def get_single_color_img(value_RGBA):
 '''
 make an character
 '''
-def get_char_image(char, font_relative_path, font_size, color):
+def get_char_image(char, font_binary, font_size, color):
     img = get_single_color_img((255,255,255,0))
     img = resize_image_to_size(img, (font_size, font_size))
     img_pil = Image.fromarray(img)
@@ -106,7 +111,7 @@ def get_char_image(char, font_relative_path, font_size, color):
 
     
 
-    font = ImageFont.truetype(sysio.BytesIO(get_file_binary(font_relative_path)), font_size)
+    font = ImageFont.truetype(sysio.BytesIO(font_binary), font_size)
     draw.text((0,0), char, fill=color, font=font)
 
     img = np.array(img_pil)
@@ -115,7 +120,7 @@ def get_char_image(char, font_relative_path, font_size, color):
 '''
 print text to an newly generated transparent image
 '''
-def get_text_image(text, size_hw, font_relative_path, font_size, color):
+def get_text_image(text, size_hw, font_binary, font_size, color):
     text = str(text)
     text = text[0:2000]
     img = get_single_color_img((255,255,255,0))
@@ -123,7 +128,7 @@ def get_text_image(text, size_hw, font_relative_path, font_size, color):
     img_pil = Image.fromarray(img)
 
     draw = ImageDraw.Draw(img_pil)
-    font = ImageFont.truetype(sysio.BytesIO(get_file_binary(font_relative_path)), font_size)
+    font = ImageFont.truetype(sysio.BytesIO(font_binary), font_size)
     text_str = "\n".join(textwrap.wrap(text, width=size_hw[1]*2//font_size))
     draw.text((0,0), text_str, fill=color, font=font)
 
