@@ -26,7 +26,7 @@ async def get_data_from_fileclient(file_client):
 async def get_list_of_files_binary_async(a_list_path):
     
     # client
-    client = ShareClient.from_connection_string(conn_str=connection_string, share_name="assets")
+    client = ShareClientAsync.from_connection_string(conn_str=connection_string, share_name="assets")
 
     # download files
     tasks = []
