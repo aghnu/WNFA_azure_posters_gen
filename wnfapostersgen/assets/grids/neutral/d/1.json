@@ -1,0 +1,17 @@
+[
+    {
+        "path": "2/1/neutral/",
+        "position": [4,11],
+        "size": [3,1]
+    },
+    {
+        "path": "2/2/neutral/",
+        "position": [10,6],
+        "size": [2,6]
+    },
+    {
+        "path": "2/3/neutral/",
+        "position": [0,0],
+        "size": [10,11]
+    }
+]

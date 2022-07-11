@@ -1,0 +1,22 @@
+[
+    {
+        "path": "1/anger/",
+        "position": [4,0],
+        "size": [8,8],
+        "mask": [
+            {
+                "position": [0,0],
+                "size": [2,2]
+            },
+            {
+                "position": [0,6],
+                "size": [2,2]
+            },
+            {
+                "position": [6,4],
+                "size": [2,4]
+            }
+        ]
+    }    
+]
+

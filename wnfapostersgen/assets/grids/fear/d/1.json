@@ -1,0 +1,17 @@
+[
+    {
+        "path": "2/1/fear/",
+        "position": [3,3],
+        "size": [9,1]
+    },
+    {
+        "path": "2/2/fear/",
+        "position": [0,10],
+        "size": [9,1]
+    },
+    {
+        "path": "2/3/fear/",
+        "position": [0,0],
+        "size": [4,2]
+    }
+]

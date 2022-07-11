@@ -1,0 +1,37 @@
+[
+    {
+        "path": "2/1/sadness/",
+        "position": [4,0],
+        "size": [2,2]
+    }, 
+    {
+        "path": "2/1/sadness/",
+        "position": [6,5],
+        "size": [4,7]
+    }, 
+    {
+        "path": "2/1/sadness/",
+        "position": [11,12],
+        "size": [1,12]
+    },
+    {
+        "path": "2/2/sadness/",
+        "position": [0,2],
+        "size": [4,4]
+    },
+    {
+        "path": "2/3/sadness/",
+        "position": [8,0],
+        "size": [3,12],
+        "mask": [
+            {
+                "position": [10,0],
+                "size": [1,2]
+            },
+            {
+                "position": [8,5],
+                "size": [2,7]
+            }
+        ]
+    }
+]

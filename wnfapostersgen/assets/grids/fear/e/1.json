@@ -1,0 +1,20 @@
+[
+    {
+        "path": "4/3/",
+        "type": "char",
+        "position": [0,4],
+        "size": [4,2]
+    },
+    {
+        "path": "4/2/",
+        "type": "text",
+        "position": [2,10],
+        "size": [6,2]
+    },
+    {
+        "path": "4/1/",
+        "type": "binary",
+        "position": [3,8],
+        "size": [7,1]
+    }
+]

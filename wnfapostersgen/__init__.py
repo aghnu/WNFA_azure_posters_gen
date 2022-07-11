@@ -2,8 +2,7 @@
 
 from wnfapostersgen.art_generator import ArtGeneratorFromText
 import azure.functions as func
-import base64, json
-import logging
+import base64, json, logging, random
 
 
 def compute(text):
@@ -17,7 +16,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
 
     if (req.params.get('server') == 'wakeup'):
         return func.HttpResponse(
-            "server ok",
+            str(random.random()),
             status_code=200
         )
 
@@ -32,37 +31,37 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     
     if text:
 
-            # image_binary = compute(text)
-            # image_base64 = base64.b64encode(image_binary).decode('ascii')
-            # # image_base64 = base64.urlsafe_b64encode(image_binary).decode('ascii')
-            # return func.HttpResponse(
-            #     json.dumps({
-            #         'image_data': str(image_base64)
-            #     }),
-            #     status_code=200
-            # )
+        image_binary = compute(text)
+        image_base64 = base64.b64encode(image_binary).decode('ascii')
+        # image_base64 = base64.urlsafe_b64encode(image_binary).decode('ascii')
+        return func.HttpResponse(
+            json.dumps({
+                'image_data': str(image_base64)
+            }),
+            status_code=200
+        )
 
 
-        try:
-            image_binary = compute(text)
-            image_base64 = base64.b64encode(image_binary).decode('ascii')
-            # image_base64 = base64.urlsafe_b64encode(image_binary).decode('ascii')
-            return func.HttpResponse(
-                json.dumps({
-                    'image_data': str(image_base64)
-                }),
-                status_code=200
-            )
-        except ValueError:
-            return func.HttpResponse(
-                "invalid input",
-                status_code=400
-            )
-        except:
-            return func.HttpResponse(
-                "server error",
-                status_code=500
-            )
+        # try:
+        #     image_binary = compute(text)
+        #     image_base64 = base64.b64encode(image_binary).decode('ascii')
+        #     # image_base64 = base64.urlsafe_b64encode(image_binary).decode('ascii')
+        #     return func.HttpResponse(
+        #         json.dumps({
+        #             'image_data': str(image_base64)
+        #         }),
+        #         status_code=200
+        #     )
+        # except ValueError:
+        #     return func.HttpResponse(
+        #         "invalid input",
+        #         status_code=400
+        #     )
+        # except:
+        #     return func.HttpResponse(
+        #         "server error",
+        #         status_code=500
+        #     )
     else:
         return func.HttpResponse(
             "invalid input",

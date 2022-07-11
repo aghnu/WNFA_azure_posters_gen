@@ -1,11 +1,7 @@
-from wnfapostersgen.loadFileShareFiles import list_all_files, get_file_binary, get_list_of_files_binary_async
-
+from wnfapostersgen.loadFileShareFiles import get_list_of_files_binary_async
 import wnfapostersgen.image_processing_utilities as iu
 import numpy as np
-import random
-import json
-import io as sysio
-import asyncio
+import asyncio, random, json, os
 
 # constance
 OUT_RES_WIDTH = 3200
@@ -38,6 +34,10 @@ def is_chinese_char(char):
         if c >= b and c <= t:
             return True
     return False
+
+def get_path(relative_path):
+    path = os.path.abspath(os.path.split(__file__)[0] + "/" + relative_path)
+    return path
 
 def grid_to_size(gridHeight, gridWidth):
     return (gridHeight * (OUT_RES_HEIGHT//OUT_GRID), gridWidth * (OUT_RES_WIDTH//OUT_GRID))
@@ -191,11 +191,9 @@ class GridArt:
         self.major_emotion = self.data_parser.get_main_emotion()
         self.record = record                                                                                        # (base64, text_cn, text_en)
 
-    def get_list_of_valid_files(self, relative_path):
-        file_list_all = list(map(lambda x: x['name'],list_all_files(relative_path)))
-
+    def get_list_of_valid_files_local(self, relative_path):
         file_list = \
-            [f for f in file_list_all \
+            [f for f in os.listdir(get_path(relative_path)) \
                 if f.split('.')[1] in ['png', 'jpg', 'json', 'ttf', 'otf', 'ttc']]
 
         return file_list
@@ -211,26 +209,15 @@ class GridArt:
 
         return new_grid_pos_size
 
-    # def read_grid(self):
-    #     grids = {
-    #         'a': [],
-    #         'b': [],
-    #         'c': [],
-    #         'd': [],
-    #         'e': [],
-    #         'f': [],
-    #         'g': []
-    #     }
-        
-    #     for layer in grids.keys():
-    #         path = "art_assets/grids/" + self.major_emotion[0] + "/" + layer + "/"
-    #         file_list = self.get_list_of_valid_files(path)
-    #         selected_file = self.random_generator.select_list(file_list)
+    def read_lookup(self):
+        path = "assets/meta.json"
+        lookup_meta = dict()
 
-    #         grid_json_dict = json.load(sysio.BytesIO(get_file_binary(path + selected_file)))
-    #         grids[layer].append(grid_json_dict)
-            
-    #     return grids
+        with open(get_path(path)) as f:
+            lookup_meta = json.load(f)
+        
+        return lookup_meta
+
 
     def read_grid(self):
         grids = {
@@ -242,34 +229,16 @@ class GridArt:
             'f': [],
             'g': []
         }
-        
+
         for layer in grids.keys():
-            path = "art_assets/grids/" + self.major_emotion[0] + "/" + layer + "/"
-            file_list = self.get_list_of_valid_files(path)
+            path = "assets/grids/" + self.major_emotion[0] + "/" + layer + "/"
+            file_list = self.get_list_of_valid_files_local(path)
             selected_file = self.random_generator.select_list(file_list)
-
-            grid_json_dict = json.load(sysio.BytesIO(get_file_binary(path + selected_file)))
-            grids[layer].append(grid_json_dict)
-
-        # get all paths
-        paths = []
-        for layer in grids.keys():
-            path = "art_assets/grids/" + self.major_emotion[0] + "/" + layer + "/"
-            file_list = self.get_list_of_valid_files(path)
-            selected_file = self.random_generator.select_list(file_list)
-            paths.append(path + selected_file)
-        
-        # download all
-        files_binary = asyncio.run(get_list_of_files_binary_async(paths))
-
-        files_binary_index = 0
-        for layer in grids.keys():
-            file = files_binary[files_binary_index]
-            files_binary_index += 1
-
-            grid_json_dict = json.load(sysio.BytesIO(file))
-            grids[layer].append(grid_json_dict)
             
+            with open(get_path(path + selected_file)) as f:
+                grid_json_dict = json.load(f)
+                grids[layer].append(grid_json_dict)
+        
         return grids
 
     def get_binary_code_text(self):
@@ -544,8 +513,15 @@ class GridArt:
             res_block = iu.add_mask_to_image_invert(out_selected, res_block)
             self.out = iu.paste_image(self.out, res_block, grid_to_pos(*position))
 
+    def check_path_lookup(self, path, lookup):
+        val = lookup['path'][path]
+        if isinstance(val, str):
+            val = lookup['variable'][val]
+        
+        return val
 
-    def get_all_assets_from_async_client(self, grids):
+
+    def get_all_assets_from_async_client(self, grids, lookup):
         # calculate all the assets required by each layer and retrieve them in one go.
 
         paths = []
@@ -558,9 +534,9 @@ class GridArt:
         indexs['b'].append(len(paths))
         for job in grid[0]:
             path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
+            file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
-            paths.append(path + selected_file)
+            paths.append(selected_file)
         indexs['b'].append(len(paths))
 
         #c
@@ -569,9 +545,9 @@ class GridArt:
         indexs['c'].append(len(paths))
         for job in grid[0]:
             path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
+            file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
-            paths.append(path + selected_file)
+            paths.append(selected_file)
         indexs['c'].append(len(paths))
 
         # d
@@ -580,9 +556,9 @@ class GridArt:
         indexs['d'].append(len(paths))
         for job in grid[0]:
             path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
+            file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
-            paths.append(path + selected_file)
+            paths.append(selected_file)
         indexs['d'].append(len(paths))
 
         # e
@@ -591,9 +567,9 @@ class GridArt:
         indexs['e'].append(len(paths))
         for job in grid[0]:
             path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
+            file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
-            paths.append(path + selected_file)
+            paths.append(selected_file)
         indexs['e'].append(len(paths))
         
         # f
@@ -602,9 +578,9 @@ class GridArt:
         indexs['f'].append(len(paths))
         for job in grid[0]:
             path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
+            file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
-            paths.append(path + selected_file)
+            paths.append(selected_file)
         indexs['f'].append(len(paths))
 
         # g
@@ -613,12 +589,11 @@ class GridArt:
         indexs['g'].append(len(paths))
         for job in grid[0]:
             path = "art_assets/" + job['path']
-            file_list = self.get_list_of_valid_files(path)
+            file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
-            paths.append(path + selected_file)
+            paths.append(selected_file)
         indexs['g'].append(len(paths))
-
-
+        
         # load all binary files
         files_binary = asyncio.run(get_list_of_files_binary_async(paths))
 
@@ -658,7 +633,8 @@ class GridArt:
         '''
 
         grids = self.read_grid()
-        binary_files = self.get_all_assets_from_async_client(grids)
+        lookup = self.read_lookup()
+        binary_files = self.get_all_assets_from_async_client(grids, lookup)
 
         self.apply_layer_block(grids['a'])                                  # a
         self.apply_layer_grid(grids['b'], binary_files['b'])                # b

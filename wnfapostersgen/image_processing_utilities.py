@@ -1,4 +1,4 @@
-from wnfapostersgen.loadFileShareFiles import get_file_binary
+# from wnfapostersgen.loadFileShareFiles import get_file_binary
 
 import numpy as np
 import cv2 as cv
@@ -8,27 +8,27 @@ import math
 import textwrap
 import io as sysio
 
-'''
-get the absolute path for a file
-'''
-def get_path(relative_path):
-    # path = os.path.abspath(os.path.split(__file__)[0] + "/" + relative_path)
-    return relative_path
+# '''
+# get the absolute path for a file
+# '''
+# def get_path(relative_path):
+#     # path = os.path.abspath(os.path.split(__file__)[0] + "/" + relative_path)
+#     return relative_path
 
 
 def binary_to_image(binary):
     image = np.array(Image.open(sysio.BytesIO(binary)))
     return img_as_ubyte(cv.cvtColor(image, cv.COLOR_RGB2RGBA)) 
 
-'''
-load an image from path
-image is an numpy array with RGBA chanels and a type of np.ubyte
-'''
-def load_image(relative_path):
-    image_binary = get_file_binary(relative_path)
-    image = np.array(Image.open(sysio.BytesIO(image_binary)))
+# '''
+# load an image from path
+# image is an numpy array with RGBA chanels and a type of np.ubyte
+# '''
+# def load_image(relative_path):
+#     image_binary = get_file_binary(relative_path)
+#     image = np.array(Image.open(sysio.BytesIO(image_binary)))
 
-    return img_as_ubyte(cv.cvtColor(image, cv.COLOR_RGB2RGBA))
+#     return img_as_ubyte(cv.cvtColor(image, cv.COLOR_RGB2RGBA))
 
 '''
 make an RGBA image grey scale

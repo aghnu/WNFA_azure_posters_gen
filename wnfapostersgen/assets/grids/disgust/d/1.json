@@ -1,0 +1,27 @@
+[
+    {
+        "path": "2/1/disgust/",
+        "position": [9,0],
+        "size": [3,10]
+    },
+    {
+        "path": "2/1/disgust/",
+        "position": [5,7],
+        "size": [1,5]
+    },
+    {
+        "path": "2/2/disgust/",
+        "position": [2,3],
+        "size": [2,9]
+    },
+    {
+        "path": "2/3/disgust/",
+        "position": [0,8],
+        "size": [2,4]
+    },
+    {
+        "path": "2/3/disgust/",
+        "position": [7,1],
+        "size": [1,5]
+    }
+]

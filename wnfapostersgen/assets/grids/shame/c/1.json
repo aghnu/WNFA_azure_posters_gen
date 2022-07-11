@@ -1,0 +1,25 @@
+[
+    {
+        "path": "1/shame/",
+        "position": [8,0],
+        "size": [4,5],
+        "mask": [
+            {
+                "position": [8,0],
+                "size": [1,2]
+            },
+            {
+                "position": [8,4],
+                "size": [1,1]
+            },
+            {
+                "position": [10,2],
+                "size": [2,2]
+            },
+            {
+                "position": [10,4],
+                "size": [1,1]
+            }
+        ]
+    }    
+]
