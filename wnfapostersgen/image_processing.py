@@ -428,11 +428,11 @@ class GridArt:
                     
                 
                 
-                res_block = iu.get_text_image(text_str, grid_to_size(*size), font_binary, self.random_generator.gen_range(25, 175), "black")
+                res_block = iu.get_text_image(text_str, grid_to_size(*size), font_binary, self.random_generator.gen_range(75, 175), "black")
                 res_block = iu.resize_image_to_size(res_block, grid_to_size(*size))
             elif text_type == 'binary':
                 text_str = self.get_binary_code_text()
-                res_block = iu.get_text_image(text_str, grid_to_size(*size), font_binary, self.random_generator.gen_range(25, 175), "black")
+                res_block = iu.get_text_image(text_str, grid_to_size(*size), font_binary, self.random_generator.gen_range(75, 175), "black")
                 res_block = iu.resize_image_to_size(res_block, grid_to_size(*size))
 
             # apply mask to res if relevant
