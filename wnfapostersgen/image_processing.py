@@ -110,8 +110,17 @@ class EmotionDataParser:
     '''
     return a tuple (emotion_name, emotion_value)
     '''
-    def get_main_emotion(self):
-        return self.emotion_data_sorted[0]
+    def get_main_emotion(self, float_num=None):
+        if (float_num == None):
+            return self.emotion_data_sorted[0]
+        
+        emotions = []
+        dup_factor = len(self.emotion_data_sorted)
+        for i in range(dup_factor):
+            for _ in range(dup_factor - i):
+                emotions.append(self.emotion_data_sorted[i])
+        
+        return emotions[math.floor(float_num * len(emotions))]
     
     def get_major_emotion_candidates(self):
         return self.emotion_data_sorted[0:3]
@@ -130,19 +139,31 @@ Use emotion_data to produce a seed
 this seed will be used to generate random number whenever feasible
 '''
 class ControlledRandomGenerator:
-    def __init__(self, emotion_data):
+    def __init__(self, emotion_data, record):
         self.emotion_data = emotion_data
+        self.record = record
         self.numpy_rng = self.gen_rng()
+        
     
     def gen_rng(self):
         seed = 0
+        seed_bias = 0
         index = 0
         ranking = sorted(list(self.emotion_data.values()))
         for score in ranking:
             seed = seed + score if index % 2 == 0 else seed - score
             index += 1
+
+        letters = string.ascii_letters
+        for c in self.record['text_en']:
+            if c in letters:
+                seed_bias += ord(c)
+
+        for c in self.record['text_cn']:
+            if is_chinese_char(c):
+                seed_bias -= ord(c)
         
-        return np.random.default_rng(int(seed * 1e17))
+        return np.random.default_rng(int(seed * 1e17 + seed_bias))
     
     def select_list(self,alist):
         index = math.floor(len(alist) * self.numpy_rng.random())
@@ -150,6 +171,9 @@ class ControlledRandomGenerator:
 
     def gen_range(self,min, max):
         return math.floor((max - min) * self.numpy_rng.random() + min)
+
+    def get_float(self):
+        return self.numpy_rng.random()
 
     def gen_random_rotation_and_flip(self):
         steps = []
@@ -184,12 +208,13 @@ class GridArt:
         emotion_data.pop('happiness', None)
         # END
 
+        self.random_generator = ControlledRandomGenerator(emotion_data, record)                                     # seeded random generator
         self.data_parser = EmotionDataParser(emotion_data)                                                          # emotion data parser
-        self.random_generator = ControlledRandomGenerator(emotion_data)                                             # seeded random generator
+        
         self.out = np.zeros((OUT_RES_HEIGHT, OUT_RES_WIDTH, 4), dtype=np.ubyte)                                     # output image
         self.out[:,:] = [255,255,255,255]
         # self.major_emotion = self.random_generator.select_list(self.data_parser.get_major_emotion_candidates())   # major emotion
-        self.major_emotion = self.data_parser.get_main_emotion()
+        self.major_emotion = self.data_parser.get_main_emotion(self.random_generator.get_float())
         self.record = record                                                                                        # (base64, text_cn, text_en)
 
     def get_list_of_valid_files_local(self, relative_path):
