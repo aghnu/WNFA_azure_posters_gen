@@ -1,18 +1,26 @@
-# from azure.storage.fileshare import ShareClient
+from azure.storage.fileshare import ShareClient
 from wnfapostersgen.secrets import connection_string
 from azure.storage.fileshare.aio import ShareClient as ShareClientAsync
 
 import asyncio
 
-# share = ShareClient.from_connection_string(conn_str=connection_string, share_name="assets")
+share = ShareClient.from_connection_string(conn_str=connection_string, share_name="assets")
 
-# def list_all_files(path):
-#     dir_client = share.get_directory_client(path)
-#     return list(dir_client.list_directories_and_files())
+def warm_up():
+    try:
+        get_file_binary('art_assets/meta.json')
+        list_all_files('art_assets/')
+        return True
+    except:
+        return False
 
-# def get_file_binary(path):
-#     file_client = share.get_file_client(path)
-#     return file_client.download_file().readall()    
+def list_all_files(path):
+    dir_client = share.get_directory_client(path)
+    return list(dir_client.list_directories_and_files())
+
+def get_file_binary(path):
+    file_client = share.get_file_client(path)
+    return file_client.download_file().readall()    
 
 async def get_data_from_fileclient(file_client):
     data = await file_client.download_file()

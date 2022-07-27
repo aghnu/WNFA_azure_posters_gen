@@ -1,6 +1,7 @@
 
 
 from wnfapostersgen.art_generator import ArtGeneratorFromText
+from wnfapostersgen.loadFileShareFiles import warm_up
 import azure.functions as func
 import base64, json, logging, random
 
@@ -15,10 +16,16 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     if (req.params.get('server') == 'wakeup'):
-        return func.HttpResponse(
-            str(random.random()),
-            status_code=200
-        )
+        if (warm_up()):
+            return func.HttpResponse(
+                str(random.random()),
+                status_code=200
+            )
+        else:
+            return func.HttpResponse(
+                str(random.random()),
+                status_code=500
+            )
 
     text = req.params.get('text')
     if not text:
