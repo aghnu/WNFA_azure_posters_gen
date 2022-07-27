@@ -1,7 +1,7 @@
 from wnfapostersgen.loadFileShareFiles import get_list_of_files_binary_async
 import wnfapostersgen.image_processing_utilities as iu
 import numpy as np
-import asyncio, random, json, os
+import asyncio, random, json, os, string, base64
 
 # constance
 OUT_RES_WIDTH = 3200
@@ -170,6 +170,10 @@ class ControlledRandomGenerator:
             steps.append('f')
 
         return steps
+    
+    def gen_random_string(self, length):
+        letters = string.ascii_letters
+        return ''.join(random.choice(letters) for i in range(length))
 
 '''
 Generate a grid art when provided with emotion data
@@ -415,12 +419,20 @@ class GridArt:
                 res_block = iu.get_char_image(text_str, font_binary, grid_to_size(*size)[1], "black")
                 res_block = iu.resize_image_to_size(res_block, grid_to_size(*size))
             elif text_type == 'text':
-                text_str = self.record['base64']
-                res_block = iu.get_text_image(text_str, grid_to_size(*size), font_binary, self.random_generator.gen_range(50, 150), "black")
+
+                text_str = self.record.get('base64', None)
+                # base64 string, if not provide, use the image so far
+                if text_str == None:
+                    text_str = self.random_generator.gen_random_string(1000)
+                    text_str = base64.b64encode(text_str.encode()).decode('ascii')
+                    
+                
+                
+                res_block = iu.get_text_image(text_str, grid_to_size(*size), font_binary, self.random_generator.gen_range(25, 175), "black")
                 res_block = iu.resize_image_to_size(res_block, grid_to_size(*size))
             elif text_type == 'binary':
                 text_str = self.get_binary_code_text()
-                res_block = iu.get_text_image(text_str, grid_to_size(*size), font_binary, self.random_generator.gen_range(25, 150), "black")
+                res_block = iu.get_text_image(text_str, grid_to_size(*size), font_binary, self.random_generator.gen_range(25, 175), "black")
                 res_block = iu.resize_image_to_size(res_block, grid_to_size(*size))
 
             # apply mask to res if relevant
