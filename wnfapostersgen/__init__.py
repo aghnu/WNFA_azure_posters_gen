@@ -49,6 +49,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         # )
 
         try:
+            # validation
+            if len(text) > 500:
+                raise ValueError
+            
             image_binary = compute(text)
             image_base64 = base64.b64encode(image_binary).decode('ascii')
             # image_base64 = base64.urlsafe_b64encode(image_binary).decode('ascii')
