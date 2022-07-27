@@ -3,7 +3,7 @@ from wnfapostersgen.image_processing import GridArt, check_validation
 from wnfapostersgen.emotion_analysis import predict_emo
 from wnfapostersgen.azureTranslate import translate
 
-import base64
+# import base64
 import io
 from PIL import Image
 

@@ -1,34 +1,13 @@
-# from wnfapostersgen.loadFileShareFiles import get_file_binary
-
 import numpy as np
 import cv2 as cv
-from skimage import io, transform, img_as_ubyte
 from PIL import Image, ImageDraw, ImageFont
 import math
 import textwrap
 import io as sysio
 
-# '''
-# get the absolute path for a file
-# '''
-# def get_path(relative_path):
-#     # path = os.path.abspath(os.path.split(__file__)[0] + "/" + relative_path)
-#     return relative_path
-
-
 def binary_to_image(binary):
     image = np.array(Image.open(sysio.BytesIO(binary)))
-    return img_as_ubyte(cv.cvtColor(image, cv.COLOR_RGB2RGBA)) 
-
-# '''
-# load an image from path
-# image is an numpy array with RGBA chanels and a type of np.ubyte
-# '''
-# def load_image(relative_path):
-#     image_binary = get_file_binary(relative_path)
-#     image = np.array(Image.open(sysio.BytesIO(image_binary)))
-
-#     return img_as_ubyte(cv.cvtColor(image, cv.COLOR_RGB2RGBA))
+    return cv.cvtColor(image, cv.COLOR_RGB2RGBA)
 
 '''
 make an RGBA image grey scale
@@ -70,8 +49,11 @@ def paste_image(img, overlay, position_hw):
 '''
 apply rotation to an image with given angle
 '''
-def rotate_image(img, angle):
-    return img_as_ubyte(transform.rotate(img, angle, resize=True))
+def rotate_image(img, angle, expand=True):
+    img_pil = Image.fromarray(img)
+    img_pil = img_pil.rotate(angle, expand=expand)
+    img = np.array(img_pil)
+    return img
 
 '''
 change aplha value for only pixels that are semi transparent or solid

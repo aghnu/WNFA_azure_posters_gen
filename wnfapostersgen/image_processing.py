@@ -1,7 +1,7 @@
 from wnfapostersgen.loadFileShareFiles import get_list_of_files_binary_async
 import wnfapostersgen.image_processing_utilities as iu
 import numpy as np
-import asyncio, random, json, os, string, base64
+import asyncio, json, os, string, base64, math
 
 # constance
 OUT_RES_WIDTH = 3200
@@ -132,9 +132,9 @@ this seed will be used to generate random number whenever feasible
 class ControlledRandomGenerator:
     def __init__(self, emotion_data):
         self.emotion_data = emotion_data
-        self.gen_seed()
+        self.numpy_rng = self.gen_rng()
     
-    def gen_seed(self):
+    def gen_rng(self):
         seed = 0
         index = 0
         ranking = sorted(list(self.emotion_data.values()))
@@ -142,17 +142,14 @@ class ControlledRandomGenerator:
             seed = seed + score if index % 2 == 0 else seed - score
             index += 1
         
-        random.seed(seed)
+        return np.random.default_rng(int(seed * 1e17))
     
     def select_list(self,alist):
-        return random.choice(alist)
+        index = math.floor(len(alist) * self.numpy_rng.random())
+        return alist[index]
 
     def gen_range(self,min, max):
-        return random.randrange(min, max)
-
-    def shuffle(self, alist):
-        random.shuffle(alist)
-        return alist
+        return math.floor((max - min) * self.numpy_rng.random() + min)
 
     def gen_random_rotation_and_flip(self):
         steps = []
@@ -173,7 +170,7 @@ class ControlledRandomGenerator:
     
     def gen_random_string(self, length):
         letters = string.ascii_letters
-        return ''.join(random.choice(letters) for i in range(length))
+        return ''.join(self.select_list(letters) for i in range(length))
 
 '''
 Generate a grid art when provided with emotion data
@@ -253,7 +250,8 @@ class GridArt:
             "1110", "0100",
             "1100", "1000"
         ]
-        return "".join(self.random_generator.shuffle(binary_code)) * 50
+        return ''.join(self.random_generator.select_list(binary_code) for i in range(75))
+
 
     def stretch_crop_res(self, res, size_des):
 
