@@ -29,7 +29,7 @@ def predict_emo(text):
 		'neutral':		0.85,
 		'sadness':		1,
 		'shame':		1,
-		'surprise':		1.1,
+		'surprise':		1.15,
 		'happiness':	1,
 	}
 
