@@ -71,7 +71,7 @@ def paste_image(img, overlay, position_hw):
 apply rotation to an image with given angle
 '''
 def rotate_image(img, angle):
-    return img_as_ubyte(transform.rotate(img, angle))
+    return img_as_ubyte(transform.rotate(img, angle, resize=True))
 
 '''
 change aplha value for only pixels that are semi transparent or solid

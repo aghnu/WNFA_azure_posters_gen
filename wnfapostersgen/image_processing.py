@@ -252,10 +252,16 @@ class GridArt:
         return "".join(self.random_generator.shuffle(binary_code)) * 50
 
     def stretch_crop_res(self, res, size_des):
-        # stretch a res 
 
         size_ratio = size_des[0]/size_des[1]
         res_ratio = res.shape[0]/res.shape[1]
+
+        # pre rotate res to have the best fitting
+        if (size_ratio >= 1 and res_ratio < 1) or (size_ratio < 1 and res_ratio >= 1):
+            res = iu.rotate_image(res, self.random_generator.select_list([90, 270]))
+            res_ratio = res.shape[0]/res.shape[1]
+        else:
+            res = iu.rotate_image(res, self.random_generator.select_list([0, 180]))
 
         # negative -> height smaller than width
         # positive -> height longer than width
