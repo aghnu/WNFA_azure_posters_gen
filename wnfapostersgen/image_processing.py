@@ -574,7 +574,7 @@ class GridArt:
         indexs['b'] = []
         indexs['b'].append(len(paths))
         for job in grid[0]:
-            path = "art_assets/" + job['path']
+            path = "art_assets/" + job['path'].replace('*', self.major_emotion[0])
             file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
             paths.append(selected_file)
@@ -585,7 +585,7 @@ class GridArt:
         indexs['c'] = []
         indexs['c'].append(len(paths))
         for job in grid[0]:
-            path = "art_assets/" + job['path']
+            path = "art_assets/" + job['path'].replace('*', self.major_emotion[0])
             file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
             paths.append(selected_file)
@@ -596,7 +596,7 @@ class GridArt:
         indexs['d'] = []
         indexs['d'].append(len(paths))
         for job in grid[0]:
-            path = "art_assets/" + job['path']
+            path = "art_assets/" + job['path'].replace('*', self.major_emotion[0])
             file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
             paths.append(selected_file)
@@ -607,7 +607,7 @@ class GridArt:
         indexs['e'] = []
         indexs['e'].append(len(paths))
         for job in grid[0]:
-            path = "art_assets/" + job['path']
+            path = "art_assets/" + job['path'].replace('*', self.major_emotion[0])
             file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
             paths.append(selected_file)
@@ -618,7 +618,7 @@ class GridArt:
         indexs['f'] = []
         indexs['f'].append(len(paths))
         for job in grid[0]:
-            path = "art_assets/" + job['path']
+            path = "art_assets/" + job['path'].replace('*', self.major_emotion[0])
             file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
             paths.append(selected_file)
@@ -629,7 +629,7 @@ class GridArt:
         indexs['g'] = []
         indexs['g'].append(len(paths))
         for job in grid[0]:
-            path = "art_assets/" + job['path']
+            path = "art_assets/" + job['path'].replace('*', self.major_emotion[0])
             file_list = self.check_path_lookup(path, lookup)
             selected_file = self.random_generator.select_list(file_list)
             paths.append(selected_file)

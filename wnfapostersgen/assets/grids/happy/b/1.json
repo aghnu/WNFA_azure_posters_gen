@@ -1,6 +1,6 @@
 [
     {
-        "path": "6/happy/",
+        "path": "6/*/",
         "position": [0,0],
         "size": [12,12]
     }
